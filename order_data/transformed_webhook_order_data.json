@@ -1,0 +1,104 @@
+{
+    "source_id": 12,
+    "source_uuid": "46",
+    "buyer_comment": "",
+    "manager_id": 1,
+    "manager_comment": "",
+    "promocode": "",
+    "discount_percent": 0,
+    "discount_amount": 0,
+    "shipping_price": -1,
+    "wrap_price": 0,
+    "gift_message": "",
+    "is_gift": false,
+    "gift_wrap": false,
+    "taxes": 0,
+    "ordered_at": "2024-08-10 18:17:32",
+    "buyer": {
+        "full_name": "",
+        "email": "zhangdanil74@gmail.com",
+        "phone": "+38 (099) 652-11-11"
+    },
+    "shipping": {
+        "delivery_service_id": 1,
+        "tracking_code": null,
+        "shipping_service": "Поштомат Нової пошти",
+        "shipping_address_city": "Одеса",
+        "shipping_address_country": "Ukraine",
+        "shipping_address_region": "",
+        "shipping_address_zip": "",
+        "shipping_secondary_line": "string",
+        "shipping_receive_point": "Поштомат \"Нова Пошта\" №1379: вул. Шота Руставелі, 9, під’їзд №1 (ТІЛЬКИ ДЛЯ МЕШКАНЦІВ)",
+        "recipient_full_name": "Danil Zhang ",
+        "recipient_phone": "+38 (099) 652-11-11",
+        "warehouse_ref": "db5c88d0-391c-11dd-90d9-001a92567626",
+        "shipping_date": ""
+    },
+    "marketing": {
+        "utm_source": "(direct)",
+        "utm_medium": "(none)",
+        "utm_campaign": "(none)",
+        "utm_term": "(none)",
+        "utm_content": "(none)"
+    },
+    "products": [
+        {
+            "sku": "1000001",
+            "price": 10,
+            "purchased_price": 0,
+            "discount_percent": 0,
+            "discount_amount": 0,
+            "quantity": 2,
+            "unit_type": "шт.",
+            "name": "Чашка тест",
+            "comment": "product comment",
+            "picture": "https://cdn.shopify.com/s/files/1/0808/3800/0942/files/1000001.jpg",
+            "properties": [
+                {
+                    "name": "",
+                    "value": ""
+                }
+            ]
+        },
+        {
+            "sku": "1000002",
+            "price": 15,
+            "purchased_price": 0,
+            "discount_percent": 0,
+            "discount_amount": 0,
+            "quantity": 3,
+            "unit_type": "шт.",
+            "name": "Чашка тест 2",
+            "comment": "product comment",
+            "picture": "https://cdn.shopify.com/s/files/1/0808/3800/0942/files/1000002.jpg",
+            "properties": [
+                {
+                    "name": "",
+                    "value": ""
+                }
+            ]
+        },
+        {
+            "sku": "1000001",
+            "price": 250,
+            "purchased_price": 0,
+            "discount_percent": 0,
+            "discount_amount": 65,
+            "quantity": 1,
+            "unit_type": "шт",
+            "name": "Dropshipping fee",
+            "comment": "product comment 3",
+            "picture": "https://cdn.shopify.com/s/files/1/0808/3800/0942/files/dropshipping-icon.jpg?v=1722782581"
+        }
+    ],
+    "payments": [
+        {
+            "payment_method_id": 11,
+            "payment_method": "Оплата карткою онлайн (Apple Pay, Google Pay)",
+            "amount": 65,
+            "description": "payment_description",
+            "payment_date": "2024-08-10 18:17:32",
+            "status": "paid"
+        }
+    ]
+}

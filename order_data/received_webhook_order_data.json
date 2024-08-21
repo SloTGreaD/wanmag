@@ -1,0 +1,135 @@
+{
+    "order_id": 46,
+    "user": 5,
+    "delivery_name": "Danil Zhang ",
+    "delivery_email": "zhangdanil74@gmail.com",
+    "delivery_phone": "+38 (099) 652-11-11",
+    "delivery_city": "Одеса",
+    "delivery_city_stable": "Одеса",
+    "delivery_address": "Поштомат \"Нова Пошта\" №1379: вул. Шота Руставелі, 9, під’їзд №1 (ТІЛЬКИ ДЛЯ МЕШКАНЦІВ)",
+    "delivery_type": {
+        "id": 17,
+        "title": "Поштомат Нової пошти"
+    },
+    "delivery_price": -1,
+    "comment": "",
+    "payment_type": {
+        "id": 22,
+        "title": "Онлайн-оплата банківською карткою (monobank)"
+    },
+    "payment_price": 0,
+    "payed": 0,
+    "total_default": 65,
+    "total_sum": 65,
+    "total_quantity": 5,
+    "discount_percent": 0,
+    "discount_value": 0,
+    "coupon_code": "",
+    "coupon_percent": 0,
+    "coupon_discount_value": 0,
+    "coupon_type": 0,
+    "stat_status": 1,
+    "stat_created": "2024-08-10 18:17:32",
+    "currency": "UAH",
+    "order_without_callback": false,
+    "manager_id": 0,
+    "manager_comment": "",
+    "manager_discount": 0,
+    "manager_discount_title": "",
+    "utm_source": "(direct)",
+    "utm_medium": "(none)",
+    "utm_campaign": "(none)",
+    "utm_term": "(none)",
+    "utm_content": "(none)",
+    "google_client_id": "GA1.1.1867006619.1723302517",
+    "products": [
+        {
+            "title": "Чашка тест",
+            "article": "1000001",
+            "price": 10,
+            "quantity": 2,
+            "discount_marker": "PRICE_OLD",
+            "type": "product",
+            "storage_id": 49,
+            "parent_storage_id": null,
+            "total_price": 20
+        },
+        {
+            "title": "Чашка тест 2",
+            "article": "1000002",
+            "price": 15,
+            "quantity": 3,
+            "discount_marker": "PRICE_OLD",
+            "type": "product",
+            "storage_id": 50,
+            "parent_storage_id": null,
+            "total_price": 45
+        }
+    ],
+    "analytics": {
+        "utm_source": "(direct)",
+        "utm_medium": "(none)",
+        "utm_campaign": "(none)",
+        "utm_term": "(none)",
+        "utm_content": "(none)",
+        "google_client_id": "GA1.1.1867006619.1723302517"
+    },
+    "delivery_data": {
+        "deliveryOperatorType": "nova_poshta",
+        "ownTTNPicked": false,
+        "tnId": null,
+        "tnNumber": null,
+        "tnTrackingUpdateDate": null,
+        "estimatedDeliveryDate": null,
+        "departure": {
+            "sender": {
+                "id": null,
+                "title": null,
+                "contactPerson": {
+                    "id": null,
+                    "name": null,
+                    "phone": null
+                }
+            },
+            "address": {
+                "type": "warehouse",
+                "geoObject": {
+                    "id": null,
+                    "name": null
+                },
+                "warehouse": {
+                    "id": null,
+                    "name": null
+                }
+            }
+        },
+        "destination": {
+            "recipient": {
+                "name": "Zhang",
+                "surname": "Danil",
+                "patronymic": null,
+                "phone": 380996521111
+            },
+            "address": {
+                "type": "warehouse",
+                "geoObject": {
+                    "id": "db5c88d0-391c-11dd-90d9-001a92567626",
+                    "name": "Одеса"
+                },
+                "warehouse": {
+                    "id": "8e9d4568-8cbb-11eb-9797-b8830365bd14",
+                    "name": "Поштомат \"Нова Пошта\" №1379: вул. Шота Руставелі, 9, під’їзд №1 (ТІЛЬКИ ДЛЯ МЕШКАНЦІВ)"
+                }
+            }
+        },
+        "payment": {
+            "type": "Cash",
+            "payer": "Recipient"
+        },
+        "redelivery": {
+            "cost": 65,
+            "payer": "Sender"
+        },
+        "tnStatusName": ""
+    }
+}
