@@ -9,7 +9,8 @@ import logging
 import os
 import time
 import asyncio
-
+import schedule
+import datetime
 
 # Убедитесь, что папка для логов существует
 log_directory = "/root/webhook/combine_project"
@@ -31,69 +32,81 @@ global_token = ""
 
 app = FastAPI()
 
+# Путь к директории order_data
+order_data_directory = "/root/webhook/combine_project/order_data"
 
-# Определение функции для получения заказа по order_id
-def get_order_from_horoshop(order_id, global_token):
+# Функция для очистки папки order_data
+def clear_order_data_directory():
+    try:
+        logger.info("Clearing order_data directory...")
+        for filename in os.listdir(order_data_directory):
+            file_path = os.path.join(order_data_directory, filename)
+            try:
+                if os.path.isfile(file_path) or os.path.islink(file_path):
+                    os.unlink(file_path)  # Удаляем файл или символическую ссылку
+                elif os.path.isdir(file_path):
+                    shutil.rmtree(file_path)  # Удаляем директорию и её содержимое
+                logger.info(f"Deleted {file_path}")
+            except Exception as e:
+                logger.error(f"Failed to delete {file_path}. Reason: {e}")
+        logger.info("order_data directory cleared successfully.")
+    except Exception as e:
+        logger.error(f"Failed to clear order_data directory. Reason: {e}")
+
+# Функция для получения всех заказов за текущий день
+def get_orders_for_today(global_token):
+    today = datetime.date.today()
+    today_start = today.strftime("%Y-%m-%d 00:00:00")
+    today_end = today.strftime("%Y-%m-%d 23:59:59")
+    
     url = "https://wanmag-home.online/api/orders/get/"
     
-    # Формирование тела запроса
     data = {
         "token": global_token,
-        "ids[]": [order_id],  # Массив с одним order_id
+        "from": today_start,  # Начало сегодняшнего дня
+        "to": today_end,      # Конец сегодняшнего дня
         "additionalData": True
     }
 
     try:
-        # Отправка PUT запроса
         response = requests.put(url, json=data)
         
-        # Проверка ответа
         if response.status_code == 200:
-            order_data = response.json()
-            logger.info(f"Order data received: {order_data}")
-            return order_data
+            orders_data = response.json()
+            logger.info(f"Orders data for today received: {orders_data}")
+            return orders_data
         else:
-            logger.error(f"Failed to get order data. Status code: {response.status_code}")
+            logger.error(f"Failed to get orders data. Status code: {response.status_code}")
             return None
     except Exception as e:
-        logger.error(f"Exception occurred while getting order data: {str(e)}")
+        logger.error(f"Exception occurred while getting orders data: {str(e)}")
         return None
 
-
 # Функция для обновления токена
-async def update_token():
+def update_token():
     global global_token
-    while True:
-        try:
-            url = "https://wanmag-home.online/api/auth/"
-            headers = {"Content-Type": "application/json"}
-            data = {
-                "login": "owner",
-                "password": "hahrlnpqx"
-            }
+    try:
+        url = "https://wanmag-home.online/api/auth/"
+        headers = {"Content-Type": "application/json"}
+        data = {
+            "login": "owner",
+            "password": "hahrlnpqx"
+        }
 
-            response = requests.post(url, headers=headers, json=data)
-            if response.status_code == 200:
-                response_data = response.json()
-                if response_data["status"] == "OK":
-                    global_token = response_data["response"]["token"]
-                    logger.info(f"Token updated successfully: {global_token}")
-                else:
-                    logger.error("Failed to update token: Invalid status in response")
+        response = requests.post(url, headers=headers, json=data)
+        if response.status_code == 200:
+            response_data = response.json()
+            if response_data["status"] == "OK":
+                global_token = response_data["response"]["token"]
+                logger.info(f"Token updated successfully: {global_token}")
             else:
-                logger.error(f"Failed to update token: {response.status_code}")
-        except Exception as e:
-            logger.error(f"Exception occurred while updating token: {str(e)}")
+                logger.error("Failed to update token: Invalid status in response")
+        else:
+            logger.error(f"Failed to update token: {response.status_code}")
+    except Exception as e:
+        logger.error(f"Exception occurred while updating token: {str(e)}")
 
-        # Ждем 4 минуты перед следующим запросом
-        await asyncio.sleep(240)
-
-# Запуск фоновой задачи для обновления токена
-@app.on_event("startup")
-async def startup_event():
-    asyncio.create_task(update_token())
-
-
+# Функция для преобразования данных
 def transform_payload(first_order, payload, db: Session):
     logger.info("Transforming payload...")
 
@@ -184,108 +197,65 @@ def transform_payload(first_order, payload, db: Session):
                 "amount": payload.get("total_sum", 0),
                 "description": "payment_description",  # fixed value
                 "payment_date": payload.get("stat_created", ""),
-                "status": "paid" if first_order.get("payed", 0) == 1 else "not_paid"
-
+                "status": "paid" if payload.get("payed", 0) == 1 else "not_paid"
             }
         ]
     }
     logger.info("Payload transformed successfully.")
     return transformed
 
-@app.put("/webhook")
-async def upload_json(request: Request, file: UploadFile = File(None), data: str = Form(None), db: Session = Depends(database.get_db)):
-    try:
-        logger.info("Receiving JSON data...")
+# Задача для выполнения каждый день в 00:01
+def daily_task():
+    logger.info("Running daily task to update token and fetch today's orders...")
+    
+    # Сначала обновляем токен
+    update_token()
+    
+    # Затем получаем заказы за сегодняшний день
+    orders_data = get_orders_for_today(global_token)
 
-        if file:
-            logger.info(f"File filename: {file.filename}")
-            logger.info(f"File content_type: {file.content_type}")
-            contents = await file.read()
-            logger.info(f"File contents: {contents}")
-            payload = json.loads(contents)
-        elif data:
-            logger.info(f"Form data: {data}")
-            payload = json.loads(data)
-        else:
-            body = await request.body()
-            logger.info(f"Raw body: {body}")
-            payload = json.loads(body.decode('utf-8'))
+    if orders_data:
+        # Сохраняем данные заказов в файл
+        with open(os.path.join(upload_directory, f"orders_{datetime.date.today()}.json"), "w", encoding="utf-8") as f:
+            json.dump(orders_data, f, ensure_ascii=False, indent=4)
+        logger.info("Today's orders saved to JSON file successfully.")
         
-        logger.info(f"Received payload: {payload}")
+        # Отправляем данные по каждому заказу в KeyCRM
+        db = next(database.get_db())  # Получаем сессию БД
+        for order in orders_data.get('response', {}).get('orders', []):
+            transformed_data = transform_payload(order, order, db)
+            url = "https://openapi.keycrm.app/v1/order"
+            headers = {
+                "Authorization": "Bearer MjQ1ZmE0Mzc2OTMyZWY4MjMxMzZiNmFlMDJhNzliNWM3ZWVlYTUzZQ",
+                "Content-Type": "application/json"
+            }
+            response = requests.post(url, headers=headers, json=transformed_data)
+            logger.info(f"Status Code: {response.status_code}")
+            logger.info(f"Response Text: {response.text}")
+            
+            if response.status_code == 200 or response.status_code == 201:
+                logger.info("Data successfully sent to KeyCRM API.")
+            else:
+                logger.error(f"Failed to send data to KeyCRM API. Status code: {response.status_code}, Response: {response.text}")
+        
+        logger.info("Daily task completed successfully.")
+    else:
+        logger.error("Failed to retrieve orders data for today.")
 
-        # Сохранение полученных данных в файл
-        with open(os.path.join(upload_directory, "received_webhook_order_data.json"), "w", encoding="utf-8") as f:
-            json.dump(payload, f, ensure_ascii=False, indent=4)
-        logger.info("Received payload saved to JSON file successfully.")
-        logger.info("=" * 50)  # Разделительная линия
+# Запуск ежедневной задачи и обновление токена
+@app.on_event("startup")
+async def startup_event():
+    # Добавляем задачу на ежедневный запуск в 00:01
+    schedule.every().day.at("14:42").do(daily_task)
+    schedule.every().day.at("01:00").do(clear_order_data_directory)
 
-        # Ждем три минуты
-        logger.info("Waiting for 3 minutes before rechecking payment status...")
-        time.sleep(60)
+    # Запускаем выполнение задач по расписанию в фоновом процессе
+    asyncio.create_task(run_scheduler())
 
-        # Получаем обновленные данные заказа
-        token = global_token  # Используем сохраненный токен
-        order_id = payload.get("order_id", "")
-        order_data = get_order_from_horoshop(order_id, token)
-
-        # Извлечение статуса оплаты из order_data
-        orders = order_data.get('response', {}).get('orders', [])
-        if not orders:
-            raise HTTPException(status_code=400, detail="No orders found in the response.")
-
-        first_order = orders[0]  # Берем первый заказ из списка
-        payed_status = first_order.get("payed", 0)
-        logger.info(f"Payed status from order_data: {payed_status}")
-
-        # Используем payed_status для определения статуса оплаты
-        payment_status = "paid" if payed_status == 1 else "not_paid"
-        logger.info(f"Determined payment status: {payment_status}")
-
-       # if order_data:
-       #     # Обновляем статус оплаты на основании данных из Horoshop
-       #     new_payment_status = order_data.get("payed", 0)
-       #     if new_payment_status == 1:
-       #         payload["payed"] = 1
-       #     else:
-       #         payload["payed"] = 0
-
-        # Преобразование данных
-        transformed_data = transform_payload(first_order, payload, db)
-
-        # Сохранение преобразованных данных в другой файл
-        with open(os.path.join(upload_directory, "transformed_webhook_order_data.json"), "w", encoding="utf-8") as f:
-            json.dump(transformed_data, f, ensure_ascii=False, indent=4)
-        logger.info("Transformed data saved to JSON file successfully.")
-        logger.info("=" * 50)  # Разделительная линия
-
-        # Отправка преобразованных данных на указанный URL
-        url = "https://openapi.keycrm.app/v1/order"
-        headers = {
-            "Authorization": "Bearer MjQ1ZmE0Mzc2OTMyZWY4MjMxMzZiNmFlMDJhNzliNWM3ZWVlYTUzZQ",
-            "Content-Type": "application/json"
-        }
-        response = requests.post(url, headers=headers, json=transformed_data)
-
-        logger.info(f"Status Code: {response.status_code}")
-        logger.info(f"Response Text: {response.text}")
-
-        if response.status_code == 200 or response.status_code == 201:
-            logger.info("Data successfully sent to KeyCRM API.")
-        else:
-            logger.error(f"Failed to send data to KeyCRM API. Status code: {response.status_code}, Response: {response.text}")
-        logger.info("=" * 50)  # Разделительная линия
-
-        return JSONResponse(status_code=200, content={
-            "message": "JSON data received, transformed and sent successfully",
-            "api_response": response.json()
-        })
-    except Exception as e:
-        logger.error(f"Error occurred while processing JSON data: {str(e)}")
-        raise HTTPException(status_code=400, detail=str(e))
-
-
-# Создание таблиц
-models.Base.metadata.create_all(bind=database.engine)
+async def run_scheduler():
+    while True:
+        schedule.run_pending()
+        await asyncio.sleep(1)
 
 # Pydantic модель для входящих данных
 class UserCreate(BaseModel):
@@ -309,10 +279,10 @@ def create_user(user: UserCreate, db: Session = Depends(database.get_db)):
     db_user = crud.create_user(db=db, user_id=user.id, email=user.email)
     return db_user
 
-
 @app.middleware("http")
 async def ignore_get_requests(request: Request, call_next):
     if request.method == "GET":
-        return JSONResponse(status_code=405, content={"message": "Fuck you!!!!"})
+        return JSONResponse(status_code=405, content={"message": "Not allowed"})
     response = await call_next(request)
     return response
+
