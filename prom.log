@@ -1,0 +1,65 @@
+Hellow World
+CSV файл успешно загружен в папку /root/webhook/combine_project/downloads/tovary.csv!
+Информация о товарах успешно загружена и сохранена в /root/webhook/combine_project/downloads/products_list.json!
+Traceback (most recent call last):
+  File "/root/webhook/combine_project/quantity.py", line 94, in <module>
+    sku_quantity_map = read_csv(csv_file_path)
+  File "/root/webhook/combine_project/quantity.py", line 78, in read_csv
+    with open(csv_file_path, newline='', encoding='utf-8') as csvfile:
+FileNotFoundError: [Errno 2] No such file or directory: 'downloads/tovary.csv'
+CSV файл успешно загружен в папку /root/webhook/combine_project/downloads/tovary.csv!
+Информация о товарах успешно загружена и сохранена в /root/webhook/combine_project/downloads/products_list.json!
+Traceback (most recent call last):
+  File "/root/webhook/combine_project/quantity.py", line 94, in <module>
+    sku_quantity_map = read_csv(csv_file_path)
+  File "/root/webhook/combine_project/quantity.py", line 78, in read_csv
+    with open(csv_file_path, newline='', encoding='utf-8') as csvfile:
+FileNotFoundError: [Errno 2] No such file or directory: 'downloads/tovary.csv'
+CSV файл успешно загружен в папку /root/webhook/combine_project/downloads/tovary.csv!
+Информация о товарах успешно загружена и сохранена в /root/webhook/combine_project/downloads/products_list.json!
+Traceback (most recent call last):
+  File "/root/webhook/combine_project/quantity.py", line 94, in <module>
+    sku_quantity_map = read_csv(csv_file_path)
+  File "/root/webhook/combine_project/quantity.py", line 78, in read_csv
+    with open(csv_file_path, newline='', encoding='utf-8') as csvfile:
+FileNotFoundError: [Errno 2] No such file or directory: 'downloads/tovary.csv'
+CSV файл успешно загружен в папку /root/webhook/combine_project/downloads/tovary.csv!
+Информация о товарах успешно загружена и сохранена в /root/webhook/combine_project/downloads/products_list.json!
+Traceback (most recent call last):
+  File "/root/webhook/combine_project/quantity.py", line 94, in <module>
+    sku_quantity_map = read_csv(csv_file_path)
+  File "/root/webhook/combine_project/quantity.py", line 78, in read_csv
+    with open(csv_file_path, newline='', encoding='utf-8') as csvfile:
+FileNotFoundError: [Errno 2] No such file or directory: 'downloads/tovary.csv'
+CSV файл успешно загружен в папку /root/webhook/combine_project/downloads/tovary.csv!
+Информация о товарах успешно загружена и сохранена в /root/webhook/combine_project/downloads/products_list.json!
+Traceback (most recent call last):
+  File "/root/webhook/combine_project/quantity.py", line 94, in <module>
+    sku_quantity_map = read_csv(csv_file_path)
+  File "/root/webhook/combine_project/quantity.py", line 78, in read_csv
+    with open(csv_file_path, newline='', encoding='utf-8') as csvfile:
+FileNotFoundError: [Errno 2] No such file or directory: 'downloads/tovary.csv'
+CSV файл успешно загружен в папку /root/webhook/combine_project/downloads/tovary.csv!
+Информация о товарах успешно загружена и сохранена в /root/webhook/combine_project/downloads/products_list.json!
+Traceback (most recent call last):
+  File "/root/webhook/combine_project/quantity.py", line 94, in <module>
+    sku_quantity_map = read_csv(csv_file_path)
+  File "/root/webhook/combine_project/quantity.py", line 78, in read_csv
+    with open(csv_file_path, newline='', encoding='utf-8') as csvfile:
+FileNotFoundError: [Errno 2] No such file or directory: 'downloads/tovary.csv'
+CSV файл успешно загружен в папку /root/webhook/combine_project/downloads/tovary.csv!
+Информация о товарах успешно загружена и сохранена в /root/webhook/combine_project/downloads/products_list.json!
+Traceback (most recent call last):
+  File "/root/webhook/combine_project/quantity.py", line 94, in <module>
+    sku_quantity_map = read_csv(csv_file_path)
+  File "/root/webhook/combine_project/quantity.py", line 78, in read_csv
+    with open(csv_file_path, newline='', encoding='utf-8') as csvfile:
+FileNotFoundError: [Errno 2] No such file or directory: 'downloads/tovary.csv'
+CSV файл успешно загружен в папку /root/webhook/combine_project/downloads/tovary.csv!
+Информация о товарах успешно загружена и сохранена в /root/webhook/combine_project/downloads/products_list.json!
+Traceback (most recent call last):
+  File "/root/webhook/combine_project/quantity.py", line 94, in <module>
+    sku_quantity_map = read_csv(csv_file_path)
+  File "/root/webhook/combine_project/quantity.py", line 78, in read_csv
+    with open(csv_file_path, newline='', encoding='utf-8') as csvfile:
+FileNotFoundError: [Errno 2] No such file or directory: 'downloads/tovary.csv'
